@@ -1,0 +1,16 @@
+// Application Gateway access and WAF blocks
+union isfuzzy=true AGWAccessLogs, AGWFirewallLogs, AzureDiagnostics
+| where TimeGenerated > ago(2h)
+| where ResourceProvider has 'MICROSOFT.NETWORK' or _ResourceId has 'applicationGateways'
+| project TimeGenerated, Category, OperationName, clientIP_s, requestUri_s, httpStatus_d, action_s, ruleId_s, Message
+| order by TimeGenerated desc
+
+// Azure Firewall rule and DNS evidence
+AZFWNetworkRule, AZFWApplicationRule, AZFWNatRule, AZFWDnsQuery
+| where TimeGenerated > ago(2h)
+| order by TimeGenerated desc
+
+// Discover flow-log tables after Network Watcher is enabled for the VNet
+search "Flow"
+| where TimeGenerated > ago(2h)
+| take 200

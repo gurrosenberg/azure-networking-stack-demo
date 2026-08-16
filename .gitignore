@@ -1,0 +1,11 @@
+# Azure and deployment state
+*.parameters.local.json
+*.log
+.azure/
+work/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
